@@ -190,20 +190,23 @@ const faceRecognition = {
     },
 
     capturePhoto() {
-        if (!this.video || !this.canvas) return;
+    if (!this.video || !this.canvas) return;
 
-        const ctx = this.canvas.getContext('2d');
-        this.canvas.width = this.video.videoWidth;
-        this.canvas.height = this.video.videoHeight;
+    const ctx = this.canvas.getContext('2d');
+    
+    // UBAH BAGIAN INI: Perkecil resolusi agar Base64 tidak obesitas
+    const targetWidth = 400; // Lebar gambar cukup 400px untuk spreadsheet
+    const scale = targetWidth / this.video.videoWidth;
+    const targetHeight = this.video.videoHeight * scale;
 
-        // Draw video frame to canvas
-        ctx.drawImage(this.video, 0, 0);
+    this.canvas.width = targetWidth;
+    this.canvas.height = targetHeight;
 
-        // Show scanning animation
-        const scanningLine = document.getElementById('scanning-line');
-        if (scanningLine) {
-            scanningLine.style.display = 'block';
-        }
+    // Gambar ulang video dengan ukuran yang sudah diperkecil
+    ctx.drawImage(this.video, 0, 0, targetWidth, targetHeight);
+
+    // ... sisa kode animasi tetap sama
+}
 
         // Simulate face verification (2 seconds)
         setTimeout(() => {
@@ -309,15 +312,12 @@ const faceRecognition = {
 
         // Save data
         const attendanceData = {
-            action: this.currentAction,
-            timestamp: new Date().toISOString(),
-            location: {
-                latitude: this.position.coords.latitude,
-                longitude: this.position.coords.longitude,
-                accuracy: this.position.coords.accuracy
-            },
-            photo: this.canvas ? this.canvas.toDataURL('image/png') : null
-        };
+        action: this.currentAction,
+        timestamp: new Date().toISOString(),
+        // UBAH BAGIAN INI: Jadikan string agar terbaca di Spreadsheet
+       location: `${this.position.coords.latitude}, ${this.position.coords.longitude}`, 
+       photo: this.canvas ? this.canvas.toDataURL('image/jpeg', 0.5) : null // Ubah ke JPEG (lihat poin 2)
+};
 
         // Store temporary data
         storage.set('temp_attendance', attendanceData);
