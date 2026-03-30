@@ -391,9 +391,9 @@ const absensi = {
 
         // Save verification data
         this.attendanceData.verification = {
-            verificationTimestamp: verificationData.timestamp,
-            verificationLocation: verificationData.location,
-            verificationPhoto: verificationData.photo
+            this.attendanceData.verificationTimestamp = verificationData.timestamp;
+            this.attendanceData.verificationLocation = verificationData.location;
+            this.attendanceData.verificationPhoto = verificationData.photo;
 };
 await this.saveAttendance();
         this.updateUI();
