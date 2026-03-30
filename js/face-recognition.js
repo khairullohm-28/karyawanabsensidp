@@ -13,24 +13,32 @@ const faceRecognition = {
     position: null,
 
     init(action) {
-        this.currentAction = action;
-        this.photoCaptured = false;
-        this.locationVerified = false;
-        this.position = null;
+      console.log('🎥 Face Recognition INIT:', action);
+  
+      this.currentAction = action;
+      this.photoCaptured = false;
+      this.locationVerified = false;
+      this.position = null;
 
-        // Update UI based on action
-        this.updateActionTitle(action);
-
-        // Initialize camera
-        this.initCamera();
-
-        // Initialize location
-        this.initLocation();
-
-        // Bind buttons
-        this.bindButtons();
-    },
-
+      // ✅ Update title IMMEDIATELY
+      this.updateActionTitle(action);
+  
+     // ✅ Clear camera first
+     this.cleanup();
+  
+     // ✅ Init camera + location PARALLEL
+     Promise.all([
+       this.initCamera(),
+       this.initLocation()
+     ]).then(() => {
+       console.log('✅ Camera + Location ready');
+       this.bindButtons();
+       this.checkCanSubmit();
+     }).catch(e => {
+       console.error('❌ Init failed:', e);
+       toast.error('Gagal memulai kamera');
+     });
+    }
     updateActionTitle(action) {
         const titles = {
             'clock-in': { title: 'Clock In - Verifikasi Wajah', subtitle: 'Verifikasi wajah Anda untuk Clock In' },
