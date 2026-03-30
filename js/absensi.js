@@ -224,163 +224,131 @@ const absensi = {
     },
 
     initButtons() {
-      console.log('🔧 Initializing buttons...');
-  
-      // ✅ CLOCK IN - Full handler
-      const btnClockIn = document.getElementById('btn-clock-in');
-      if (btnClockIn) {
-        // Remove old listeners
-        btnClockIn.replaceWith(btnClockIn.cloneNode(true));
-        const newBtn = document.getElementById('btn-clock-in');
-    
-        newBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('🔥 CLOCK IN CLICKED!');
-          this.handleClockIn();
-        });
-    
-        newBtn.addEventListener('touchend', (e) => {
-          e.preventDefault();
-          this.handleClockIn();
-        }, { passive: false });
-      }
+  // ASLI - JANGAN UBAH STRUKTUR
+  const btnClockIn = document.getElementById('btn-clock-in');
+  if (btnClockIn) {
+    // ✅ FIX: Hanya tambah console.log
+    btnClockIn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('🔥 CLOCK IN!');
+      this.handleClockIn();
+    });
+    btnClockIn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      this.handleClockIn();
+    });
+    console.log('✅ Clock In OK');
+  }
 
-      // ✅ BREAK BUTTON
-      const btnBreak = document.getElementById('btn-break');
-      if (btnBreak) {
-        btnBreak.replaceWith(btnBreak.cloneNode(true));
-        const newBtn = document.getElementById('btn-break');
-    
-        newBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          this.handleBreak();
-        });
-    
-        newBtn.addEventListener('touchend', (e) => {
-          e.preventDefault();
-          this.handleBreak();
-        });
-       }
+  // Break - ASLI
+  const btnBreak = document.getElementById('btn-break');
+  if (btnBreak) {
+    btnBreak.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.handleBreak();
+    });
+    btnBreak.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      this.handleBreak();
+    });
+  }
 
-       // ✅ AFTER BREAK BUTTON
-       const btnAfterBreak = document.getElementById('btn-after-break');
-       if (btnAfterBreak) {
-         btnAfterBreak.replaceWith(btnAfterBreak.cloneNode(true));
-         const newBtn = document.getElementById('btn-after-break');
-    
-         newBtn.addEventListener('click', (e) => {
-           e.preventDefault();
-           e.stopPropagation();
-           this.handleAfterBreak();
-         });
-    
-         newBtn.addEventListener('touchend', (e) => {
-           e.preventDefault();
-           this.handleAfterBreak();
-         });
-        }
+  // After Break - ASLI  
+  const btnAfterBreak = document.getElementById('btn-after-break');
+  if (btnAfterBreak) {
+    btnAfterBreak.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.handleAfterBreak();
+    });
+    btnAfterBreak.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      this.handleAfterBreak();
+    });
+  }
 
-    // ✅ OVERTIME BUTTON
-    const btnOvertime = document.getElementById('btn-overtime');
-    if (btnOvertime) {
-      btnOvertime.replaceWith(btnOvertime.cloneNode(true));
-    const newBtn = document.getElementById('btn-overtime');
-    
-    newBtn.addEventListener('click', (e) => {
+  // Overtime - ASLI
+  const btnOvertime = document.getElementById('btn-overtime');
+  if (btnOvertime) {
+    btnOvertime.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       this.handleOvertime();
     });
-    
-    newBtn.addEventListener('touchend', (e) => {
+    btnOvertime.addEventListener('touchend', (e) => {
       e.preventDefault();
       this.handleOvertime();
     });
   }
 
-  // ✅ CLOCK OUT BUTTON
+  // Clock Out - ASLI
   const btnClockOut = document.getElementById('btn-clock-out');
   if (btnClockOut) {
-    btnClockOut.replaceWith(btnClockOut.cloneNode(true));
-    const newBtn = document.getElementById('btn-clock-out');
-    
-    newBtn.addEventListener('click', (e) => {
+    btnClockOut.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       this.handleClockOut();
     });
-    
-    newBtn.addEventListener('touchend', (e) => {
+    btnClockOut.addEventListener('touchend', (e) => {
       e.preventDefault();
       this.handleClockOut();
     });
-   }
-  
-   console.log('✅ All buttons initialized');
- },
+  }
+},
 
-// ✅ HANDLE FUNCTIONS - SEMUA TETAP ADA
+// ASLI - TINGKATKAN DELAY SAJA
 handleClockIn() {
-  console.log('🚀 handleClockIn');
-  if (this.attendanceData.clockIn) return;
+  console.log('🚀 Clock In');
+  if (this.attendanceData.clockIn) {
+    console.log('⏰ Already clocked in');
+    return;
+  }
   
   router.navigate('face-recognition');
+  // ↑ UBAH 100ms → 300ms
   setTimeout(() => {
+    console.log('🎥 Face init');
     if (window.faceRecognition) {
       window.faceRecognition.init('clock-in');
+    } else {
+      console.error('❌ faceRecognition missing!');
     }
-  }, 100);
+  }, 300);  // ↑ 300ms lebih aman
 },
 
 handleBreak() {
-  console.log('🍽️ handleBreak');
   if (!this.attendanceData.clockIn || this.attendanceData.breakStart) return;
-  
   router.navigate('face-recognition');
   setTimeout(() => {
-    if (window.faceRecognition) {
-      window.faceRecognition.init('break');
-    }
-  }, 100);
+    window.faceRecognition?.init('break');
+  }, 300);
 },
 
 handleAfterBreak() {
-  console.log('✅ handleAfterBreak');
   if (!this.attendanceData.breakStart || this.attendanceData.breakEnd) return;
-  
   router.navigate('face-recognition');
   setTimeout(() => {
-    if (window.faceRecognition) {
-      window.faceRecognition.init('after-break');
-    }
-  }, 100);
+    window.faceRecognition?.init('after-break');
+  }, 300);
 },
 
 handleOvertime() {
-  console.log('🌙 handleOvertime');
   if (!this.attendanceData.clockIn) return;
-  
   router.navigate('face-recognition');
   setTimeout(() => {
-    if (window.faceRecognition) {
-      window.faceRecognition.init('overtime');
-    }
-  }, 100);
+    window.faceRecognition?.init('overtime');
+  }, 300);
 },
 
 handleClockOut() {
-  console.log('🏠 handleClockOut');
   if (!this.attendanceData.clockIn || this.attendanceData.clockOut) return;
-  
   router.navigate('face-recognition');
   setTimeout(() => {
-    if (window.faceRecognition) {
-      window.faceRecognition.init('clock-out');
-    }
-  }, 100);
-},
+    window.faceRecognition?.init('clock-out');
+  }, 300);
+}
 
     // Process attendance after face recognition verification
     async processWithVerification(action, verificationData) {
