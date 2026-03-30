@@ -224,137 +224,163 @@ const absensi = {
     },
 
     initButtons() {
-        // Clock In - Add both click and touch events for mobile
-        const btnClockIn = document.getElementById('btn-clock-in');
-        if (btnClockIn) {
-            btnClockIn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.handleClockIn();
-            });
-            btnClockIn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                this.handleClockIn();
-            });
-            console.log('Clock In button initialized, disabled:', btnClockIn.disabled);
+      console.log('🔧 Initializing buttons...');
+  
+      // ✅ CLOCK IN - Full handler
+      const btnClockIn = document.getElementById('btn-clock-in');
+      if (btnClockIn) {
+        // Remove old listeners
+        btnClockIn.replaceWith(btnClockIn.cloneNode(true));
+        const newBtn = document.getElementById('btn-clock-in');
+    
+        newBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('🔥 CLOCK IN CLICKED!');
+          this.handleClockIn();
+        });
+    
+        newBtn.addEventListener('touchend', (e) => {
+          e.preventDefault();
+          this.handleClockIn();
+        }, { passive: false });
+      }
+
+      // ✅ BREAK BUTTON
+      const btnBreak = document.getElementById('btn-break');
+      if (btnBreak) {
+        btnBreak.replaceWith(btnBreak.cloneNode(true));
+        const newBtn = document.getElementById('btn-break');
+    
+        newBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.handleBreak();
+        });
+    
+        newBtn.addEventListener('touchend', (e) => {
+          e.preventDefault();
+          this.handleBreak();
+        });
+       }
+
+       // ✅ AFTER BREAK BUTTON
+       const btnAfterBreak = document.getElementById('btn-after-break');
+       if (btnAfterBreak) {
+         btnAfterBreak.replaceWith(btnAfterBreak.cloneNode(true));
+         const newBtn = document.getElementById('btn-after-break');
+    
+         newBtn.addEventListener('click', (e) => {
+           e.preventDefault();
+           e.stopPropagation();
+           this.handleAfterBreak();
+         });
+    
+         newBtn.addEventListener('touchend', (e) => {
+           e.preventDefault();
+           this.handleAfterBreak();
+         });
         }
 
-        // Break
-        const btnBreak = document.getElementById('btn-break');
-        if (btnBreak) {
-            btnBreak.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.handleBreak();
-            });
-            btnBreak.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                this.handleBreak();
-            });
-        }
+    // ✅ OVERTIME BUTTON
+    const btnOvertime = document.getElementById('btn-overtime');
+    if (btnOvertime) {
+      btnOvertime.replaceWith(btnOvertime.cloneNode(true));
+    const newBtn = document.getElementById('btn-overtime');
+    
+    newBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.handleOvertime();
+    });
+    
+    newBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      this.handleOvertime();
+    });
+  }
 
-        // After Break
-        const btnAfterBreak = document.getElementById('btn-after-break');
-        if (btnAfterBreak) {
-            btnAfterBreak.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.handleAfterBreak();
-            });
-            btnAfterBreak.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                this.handleAfterBreak();
-            });
-        }
+  // ✅ CLOCK OUT BUTTON
+  const btnClockOut = document.getElementById('btn-clock-out');
+  if (btnClockOut) {
+    btnClockOut.replaceWith(btnClockOut.cloneNode(true));
+    const newBtn = document.getElementById('btn-clock-out');
+    
+    newBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.handleClockOut();
+    });
+    
+    newBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      this.handleClockOut();
+    });
+   }
+  
+   console.log('✅ All buttons initialized');
+ },
 
-        // Overtime
-        const btnOvertime = document.getElementById('btn-overtime');
-        if (btnOvertime) {
-            btnOvertime.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.handleOvertime();
-            });
-            btnOvertime.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                this.handleOvertime();
-            });
-        }
+// ✅ HANDLE FUNCTIONS - SEMUA TETAP ADA
+handleClockIn() {
+  console.log('🚀 handleClockIn');
+  if (this.attendanceData.clockIn) return;
+  
+  router.navigate('face-recognition');
+  setTimeout(() => {
+    if (window.faceRecognition) {
+      window.faceRecognition.init('clock-in');
+    }
+  }, 100);
+},
 
-        // Clock Out
-        const btnClockOut = document.getElementById('btn-clock-out');
-        if (btnClockOut) {
-            btnClockOut.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.handleClockOut();
-            });
-            btnClockOut.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                this.handleClockOut();
-            });
-        }
-    },
+handleBreak() {
+  console.log('🍽️ handleBreak');
+  if (!this.attendanceData.clockIn || this.attendanceData.breakStart) return;
+  
+  router.navigate('face-recognition');
+  setTimeout(() => {
+    if (window.faceRecognition) {
+      window.faceRecognition.init('break');
+    }
+  }, 100);
+},
 
-    handleClockIn() {
-        if (this.attendanceData.clockIn) return;
+handleAfterBreak() {
+  console.log('✅ handleAfterBreak');
+  if (!this.attendanceData.breakStart || this.attendanceData.breakEnd) return;
+  
+  router.navigate('face-recognition');
+  setTimeout(() => {
+    if (window.faceRecognition) {
+      window.faceRecognition.init('after-break');
+    }
+  }, 100);
+},
 
-        // Navigate to face recognition first
-        router.navigate('face-recognition');
-        setTimeout(() => {
-            if (window.faceRecognition) {
-                window.faceRecognition.init('clock-in');
-            }
-        }, 100);
-    },
+handleOvertime() {
+  console.log('🌙 handleOvertime');
+  if (!this.attendanceData.clockIn) return;
+  
+  router.navigate('face-recognition');
+  setTimeout(() => {
+    if (window.faceRecognition) {
+      window.faceRecognition.init('overtime');
+    }
+  }, 100);
+},
 
-    handleBreak() {
-        if (!this.attendanceData.clockIn || this.attendanceData.breakStart) return;
-
-        // Navigate to face recognition
-        router.navigate('face-recognition');
-        setTimeout(() => {
-            if (window.faceRecognition) {
-                window.faceRecognition.init('break');
-            }
-        }, 100);
-    },
-
-    handleAfterBreak() {
-        if (!this.attendanceData.breakStart || this.attendanceData.breakEnd) return;
-
-        // Navigate to face recognition
-        router.navigate('face-recognition');
-        setTimeout(() => {
-            if (window.faceRecognition) {
-                window.faceRecognition.init('after-break');
-            }
-        }, 100);
-    },
-
-    handleOvertime() {
-        if (!this.attendanceData.clockIn) return;
-
-        // Navigate to face recognition
-        router.navigate('face-recognition');
-        setTimeout(() => {
-            if (window.faceRecognition) {
-                window.faceRecognition.init('overtime');
-            }
-        }, 100);
-    },
-
-    handleClockOut() {
-        if (!this.attendanceData.clockIn || this.attendanceData.clockOut) return;
-
-        // Navigate to face recognition
-        router.navigate('face-recognition');
-        setTimeout(() => {
-            if (window.faceRecognition) {
-                window.faceRecognition.init('clock-out');
-            }
-        }, 100);
-    },
+handleClockOut() {
+  console.log('🏠 handleClockOut');
+  if (!this.attendanceData.clockIn || this.attendanceData.clockOut) return;
+  
+  router.navigate('face-recognition');
+  setTimeout(() => {
+    if (window.faceRecognition) {
+      window.faceRecognition.init('clock-out');
+    }
+  }, 100);
+},
 
     // Process attendance after face recognition verification
     async processWithVerification(action, verificationData) {
